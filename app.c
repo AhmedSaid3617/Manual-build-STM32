@@ -4,8 +4,9 @@ const int arr[5] = {};
 
 int main()
 {
+    // Enable clock for GPIOC
     RCC_APB2ENR |= (1 << 4);
-    // Enable clock for GPIOC                           
+                               
 
     GPIOC_CRH |= (1 << 21);
     GPIOC_CRH &= ~(0xD << 20);
