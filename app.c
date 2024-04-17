@@ -1,5 +1,7 @@
 #include "GPIO.h"
 
+const int arr[5] = {};
+
 int main()
 {
     RCC_APB2ENR |= (1 << 4); // Enable clock for GPIOC

@@ -49,8 +49,12 @@ Linker script and memory map
 .iplt           0x080000ac        0x0
  .iplt          0x080000ac        0x0 startup.o
 
-.rel.dyn        0x080000ac        0x0
- .rel.iplt      0x080000ac        0x0 startup.o
+.rodata         0x080000ac       0x14
+ .rodata        0x080000ac       0x14 app.o
+                0x080000ac                arr
+
+.rel.dyn        0x080000c0        0x0
+ .rel.iplt      0x080000c0        0x0 startup.o
 
 .bss            0x20000000        0x0
  *(.bss*)
@@ -61,13 +65,13 @@ LOAD startup.o
 OUTPUT(app.elf elf32-littlearm)
 LOAD linker stubs
 
-.debug_info     0x00000000      0x161
- .debug_info    0x00000000       0x7e app.o
- .debug_info    0x0000007e       0xe3 startup.o
+.debug_info     0x00000000      0x191
+ .debug_info    0x00000000       0xae app.o
+ .debug_info    0x000000ae       0xe3 startup.o
 
-.debug_abbrev   0x00000000      0x105
- .debug_abbrev  0x00000000       0x60 app.o
- .debug_abbrev  0x00000060       0xa5 startup.o
+.debug_abbrev   0x00000000      0x13a
+ .debug_abbrev  0x00000000       0x95 app.o
+ .debug_abbrev  0x00000095       0xa5 startup.o
 
 .debug_loc      0x00000000       0x90
  .debug_loc     0x00000000       0x38 app.o
@@ -85,7 +89,7 @@ LOAD linker stubs
 
 .debug_str      0x00000000      0x129
  .debug_str     0x00000000      0x129 app.o
-                                 0x9e (size before relaxing)
+                                 0xab (size before relaxing)
  .debug_str     0x00000129      0x160 startup.o
 
 .comment        0x00000000       0x44
