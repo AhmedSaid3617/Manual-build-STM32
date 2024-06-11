@@ -11,99 +11,117 @@ sram             0x20000000         0x00005000         xrw
 Linker script and memory map
 
 
-.text           0x08000000       0xac
+.text           0x08000000      0x150
  *(.vectors*)
- .vectors       0x08000000       0x18 startup.o
+ .vectors       0x08000000       0x18 build/startup.o
                 0x08000000                vectors
  *(.text*)
- .text          0x08000018       0x7c app.o
+ .text          0x08000018       0x80 build/app.o
                 0x08000018                main
- .text          0x08000094       0x18 startup.o
-                0x08000094                Reset_Handler
-                0x080000a0                MM_Fault_Handler
-                0x080000a0                Bus_Fault
-                0x080000a0                Default_Handler
-                0x080000a0                H_fault_Handler
-                0x080000a0                Usage_Fault_Handler
-                0x080000a0                NMI_Handler
+ .text          0x08000098       0x90 build/startup.o
+                0x08000098                Reset_Handler
+                0x0800011c                NMI_Handler
+                0x0800011c                MM_Fault_Handler
+                0x0800011c                Bus_Fault
+                0x0800011c                Default_Handler
+                0x0800011c                H_fault_Handler
+                0x0800011c                Usage_Fault_Handler
+ .text          0x08000128       0x14 build/test.o
+                0x08000128                func
+ *(.rodata)
+ .rodata        0x0800013c       0x14 build/app.o
+                0x0800013c                arr
+                0x08000150                        _E_text = .
 
-.data           0x080000ac        0x0
- .data          0x080000ac        0x0 app.o
- .data          0x080000ac        0x0 startup.o
+.glue_7         0x08000150        0x0
+ .glue_7        0x08000150        0x0 linker stubs
 
-.igot.plt       0x080000ac        0x0
- .igot.plt      0x080000ac        0x0 startup.o
+.glue_7t        0x08000150        0x0
+ .glue_7t       0x08000150        0x0 linker stubs
 
-.glue_7         0x080000ac        0x0
- .glue_7        0x080000ac        0x0 linker stubs
+.vfp11_veneer   0x08000150        0x0
+ .vfp11_veneer  0x08000150        0x0 linker stubs
 
-.glue_7t        0x080000ac        0x0
- .glue_7t       0x080000ac        0x0 linker stubs
+.v4_bx          0x08000150        0x0
+ .v4_bx         0x08000150        0x0 linker stubs
 
-.vfp11_veneer   0x080000ac        0x0
- .vfp11_veneer  0x080000ac        0x0 linker stubs
+.iplt           0x08000150        0x0
+ .iplt          0x08000150        0x0 build/startup.o
 
-.v4_bx          0x080000ac        0x0
- .v4_bx         0x080000ac        0x0 linker stubs
+.rel.dyn        0x08000150        0x0
+ .rel.iplt      0x08000150        0x0 build/startup.o
 
-.iplt           0x080000ac        0x0
- .iplt          0x080000ac        0x0 startup.o
+.data           0x20000000        0x0 load address 0x08000150
+                0x20000000                        _S_DATA = .
+ *(.data)
+ .data          0x20000000        0x0 build/app.o
+ .data          0x20000000        0x0 build/startup.o
+ .data          0x20000000        0x0 build/test.o
+                0x20000000                        . = ALIGN (0x4)
+                0x20000000                        _E_DATA = .
 
-.rodata         0x080000ac       0x14
- .rodata        0x080000ac       0x14 app.o
-                0x080000ac                arr
+.igot.plt       0x20000000        0x0 load address 0x08000150
+ .igot.plt      0x20000000        0x0 build/startup.o
 
-.rel.dyn        0x080000c0        0x0
- .rel.iplt      0x080000c0        0x0 startup.o
-
-.bss            0x20000000        0x0
+.bss            0x20000000      0x400 load address 0x08000150
+                0x20000000                        _S_bss = .
  *(.bss*)
- .bss           0x20000000        0x0 app.o
- .bss           0x20000000        0x0 startup.o
-LOAD app.o
-LOAD startup.o
-OUTPUT(app.elf elf32-littlearm)
+ .bss           0x20000000        0x0 build/app.o
+ .bss           0x20000000      0x400 build/startup.o
+                0x20000000                stack
+ .bss           0x20000400        0x0 build/test.o
+                0x20000400                        _E_bss = .
+LOAD build/app.o
+LOAD build/startup.o
+LOAD build/test.o
+OUTPUT(stm32_blink.elf elf32-littlearm)
 LOAD linker stubs
 
-.debug_info     0x00000000      0x191
- .debug_info    0x00000000       0xae app.o
- .debug_info    0x000000ae       0xe3 startup.o
+.debug_info     0x00000000      0x287
+ .debug_info    0x00000000       0xa6 build/app.o
+ .debug_info    0x000000a6      0x18f build/startup.o
+ .debug_info    0x00000235       0x52 build/test.o
 
-.debug_abbrev   0x00000000      0x13a
- .debug_abbrev  0x00000000       0x95 app.o
- .debug_abbrev  0x00000095       0xa5 startup.o
+.debug_abbrev   0x00000000      0x1e9
+ .debug_abbrev  0x00000000       0x96 build/app.o
+ .debug_abbrev  0x00000096      0x10a build/startup.o
+ .debug_abbrev  0x000001a0       0x49 build/test.o
 
-.debug_loc      0x00000000       0x90
- .debug_loc     0x00000000       0x38 app.o
- .debug_loc     0x00000038       0x58 startup.o
-
-.debug_aranges  0x00000000       0x40
+.debug_aranges  0x00000000       0x60
  .debug_aranges
-                0x00000000       0x20 app.o
+                0x00000000       0x20 build/app.o
  .debug_aranges
-                0x00000020       0x20 startup.o
+                0x00000020       0x20 build/startup.o
+ .debug_aranges
+                0x00000040       0x20 build/test.o
 
-.debug_line     0x00000000      0x1a1
- .debug_line    0x00000000       0x7e app.o
- .debug_line    0x0000007e      0x123 startup.o
+.debug_line     0x00000000      0x191
+ .debug_line    0x00000000       0x82 build/app.o
+ .debug_line    0x00000082       0xcf build/startup.o
+ .debug_line    0x00000151       0x40 build/test.o
 
-.debug_str      0x00000000      0x129
- .debug_str     0x00000000      0x129 app.o
-                                 0xab (size before relaxing)
- .debug_str     0x00000129      0x160 startup.o
+.debug_str      0x00000000      0x191
+ .debug_str     0x00000000      0x191 build/app.o
+                                 0xbd (size before relaxing)
+ .debug_str     0x00000191      0x1ab build/startup.o
+ .debug_str     0x00000191       0xb1 build/test.o
 
-.comment        0x00000000       0x44
- .comment       0x00000000       0x44 app.o
-                                 0x45 (size before relaxing)
- .comment       0x00000044       0x45 startup.o
+.comment        0x00000000       0x26
+ .comment       0x00000000       0x26 build/app.o
+                                 0x27 (size before relaxing)
+ .comment       0x00000026       0x27 build/startup.o
+ .comment       0x00000026       0x27 build/test.o
 
 .ARM.attributes
                 0x00000000       0x2d
  .ARM.attributes
-                0x00000000       0x2d app.o
+                0x00000000       0x2d build/app.o
  .ARM.attributes
-                0x0000002d       0x2d startup.o
+                0x0000002d       0x2d build/startup.o
+ .ARM.attributes
+                0x0000005a       0x2d build/test.o
 
-.debug_frame    0x00000000       0x74
- .debug_frame   0x00000000       0x2c app.o
- .debug_frame   0x0000002c       0x48 startup.o
+.debug_frame    0x00000000       0xb4
+ .debug_frame   0x00000000       0x2c build/app.o
+ .debug_frame   0x0000002c       0x50 build/startup.o
+ .debug_frame   0x0000007c       0x38 build/test.o
