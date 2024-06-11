@@ -38,6 +38,7 @@ clean:
 	rm *.elf -f
 	rm *.bin -f
 	rm build/*.o -f
+	rm *.map -f
 
 .PHONY: rebuild
 rebuild: clean build
