@@ -7,11 +7,11 @@ vpath %.o $(OBJS_DIR)
 
 PROJECT_NAME = stm32_blink
 CC = arm-none-eabi-
-CFLAGS = -mcpu=cortex-m3 -g
+CFLAGS = -mcpu=cortex-m3 -g -O0
 INCS = -I $(INC_DIR)
 LIBS = 
-SRC := $(wildcard $(SRC_DIR)/*.c)
-OBJ := $(subst $(SRC_DIR)/, $(OBJS_DIR)/, $(SRC:.c=.o))
+SRC := $(wildcard *.c) $(wildcard $(SRC_DIR)/*.c)
+OBJ := $(addprefix $(OBJS_DIR)/, $(notdir $(SRC:.c=.o))) 
 As = $(wildcard *.s)
 AsOBJ = $(As:.s=.o)
 
@@ -23,7 +23,7 @@ flash: build
 build: $(PROJECT_NAME).bin
 
 $(OBJS_DIR)/%.o: %.c
-	$(CC)gcc $< -c $(INCS) -o $@   $(CFLAGS)
+	$(CC)gcc $< -c $(INCS) -o $@  $(CFLAGS)
 
 $(OBJS_DIR)/%.o: %.s
 	$(CC)as $< -o $@ $(CFLAGS)
